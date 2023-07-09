@@ -50,6 +50,8 @@ class WindowCalculation: Calculation {
         return false
     }
     
+    
+    
 }
 
 struct Window {

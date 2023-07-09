@@ -27,7 +27,7 @@ class LastTwoThirdsCalculation: WindowCalculation, OrientationAware {
     
     func landscapeRect(_ visibleFrameOfScreen: CGRect) -> RectResult {
         var rect = visibleFrameOfScreen
-        rect.size.width = floor(visibleFrameOfScreen.width * 2 / 3.0)
+        rect.size.width = floor(visibleFrameOfScreen.width * (17 / 24.0))
         rect.origin.x = visibleFrameOfScreen.minX + visibleFrameOfScreen.width - rect.width
         return RectResult(rect, subAction: .rightTwoThirds)
     }
