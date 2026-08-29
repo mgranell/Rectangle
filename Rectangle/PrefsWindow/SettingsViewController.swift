@@ -49,6 +49,7 @@ class SettingsViewController: NSViewController {
     private var combinedDisplayModeCheckbox: NSButton?
     private var greenButtonOverrideCheckbox: NSButton?
     private var autoMaximizeCheckbox: NSButton?
+    private var centerThirdWidthValueLabel: NSTextField?
     
     @IBAction func toggleLaunchOnLogin(_ sender: NSButton) {
         let newSetting: Bool = sender.state == .on
@@ -241,6 +242,12 @@ class SettingsViewController: NSViewController {
                 }
             }
         }
+    }
+
+    @IBAction func centerThirdWidthSliderChanged(_ sender: NSSlider) {
+        let value = Float(sender.intValue)
+        Defaults.centerThirdWidthRatio.value = value
+        centerThirdWidthValueLabel?.stringValue = "\(Int(value))%"
     }
     
     @IBAction func restoreDefaults(_ sender: Any) {
@@ -454,6 +461,26 @@ class SettingsViewController: NSViewController {
             vSplitField.defaultsSetAction = { [weak vSplitPopUpButton] in
                 vSplitPopUpButton?.selectCurrentValue()
             }
+
+            let centerThirdWidthLabel = NSTextField(labelWithString: NSLocalizedString("Centre width (%)", tableName: "Main", value: "", comment: ""))
+            centerThirdWidthLabel.alignment = .right
+            centerThirdWidthLabel.translatesAutoresizingMaskIntoConstraints = false
+
+            let valueLabel = NSTextField(labelWithString: "\(Int(Defaults.centerThirdWidthRatio.value))%")
+            valueLabel.alignment = .left
+            valueLabel.translatesAutoresizingMaskIntoConstraints = false
+            valueLabel.setContentHuggingPriority(.required, for: .horizontal)
+            centerThirdWidthValueLabel = valueLabel
+
+            let centerThirdWidthSlider = NSSlider(frame: NSRect(x: 0, y: 0, width: 160, height: 19))
+            centerThirdWidthSlider.minValue = 10
+            centerThirdWidthSlider.maxValue = 500
+            centerThirdWidthSlider.integerValue = Int(Defaults.centerThirdWidthRatio.value)
+            centerThirdWidthSlider.isContinuous = true
+            centerThirdWidthSlider.target = self
+            centerThirdWidthSlider.action = #selector(centerThirdWidthSliderChanged(_:))
+            centerThirdWidthSlider.translatesAutoresizingMaskIntoConstraints = false
+            centerThirdWidthSlider.setContentHuggingPriority(.required, for: .horizontal)
 
             largerWidthShortcutView.setAssociatedUserDefaultsKey(WindowAction.largerWidth.name, withTransformerName: MASDictionaryTransformerName)
             smallerWidthShortcutView.setAssociatedUserDefaultsKey(WindowAction.smallerWidth.name, withTransformerName: MASDictionaryTransformerName)
@@ -703,7 +730,20 @@ class SettingsViewController: NSViewController {
             vSplitControlsStack.addArrangedSubview(vSplitPopUpButton)
             vSplitControlsStack.addArrangedSubview(vSplitField)
             vSplitRow.addArrangedSubview(vSplitControlsStack)
-            
+
+            let centerThirdWidthRow = NSStackView()
+            centerThirdWidthRow.orientation = .horizontal
+            centerThirdWidthRow.alignment = .centerY
+            centerThirdWidthRow.spacing = 18
+            centerThirdWidthRow.addArrangedSubview(centerThirdWidthLabel)
+            let centerThirdWidthControlsStack = NSStackView()
+            centerThirdWidthControlsStack.orientation = .horizontal
+            centerThirdWidthControlsStack.alignment = .centerY
+            centerThirdWidthControlsStack.spacing = 8
+            centerThirdWidthControlsStack.addArrangedSubview(centerThirdWidthSlider)
+            centerThirdWidthControlsStack.addArrangedSubview(valueLabel)
+            centerThirdWidthRow.addArrangedSubview(centerThirdWidthControlsStack)
+
             let topVerticalThirdRow = NSStackView()
             topVerticalThirdRow.orientation = .horizontal
             topVerticalThirdRow.alignment = .centerY
@@ -940,6 +980,7 @@ class SettingsViewController: NSViewController {
             mainStackView.setCustomSpacing(10, after: splitRatioHeaderLabel)
             mainStackView.addArrangedSubview(hSplitRow)
             mainStackView.addArrangedSubview(vSplitRow)
+            mainStackView.addArrangedSubview(centerThirdWidthRow)
 
             NSLayoutConstraint.activate([
                 headerLabel.widthAnchor.constraint(equalTo: mainStackView.widthAnchor),
@@ -964,12 +1005,15 @@ class SettingsViewController: NSViewController {
                 twelfthsCyclingLabel.widthAnchor.constraint(equalTo: sixteenthsCyclingLabel.widthAnchor),
                 sixteenthsCyclingLabel.widthAnchor.constraint(equalTo: hSplitLabel.widthAnchor),
                 hSplitLabel.widthAnchor.constraint(equalTo: vSplitLabel.widthAnchor),
+                vSplitLabel.widthAnchor.constraint(equalTo: centerThirdWidthLabel.widthAnchor),
                 largerWidthLabelStack.widthAnchor.constraint(equalTo: smallerWidthLabelStack.widthAnchor),
                 largerWidthShortcutView.widthAnchor.constraint(equalToConstant: 160),
                 smallerWidthShortcutView.widthAnchor.constraint(equalToConstant: 160),
                 widthStepField.widthAnchor.constraint(equalToConstant: 160),
                 hSplitControlsStack.widthAnchor.constraint(equalToConstant: 160),
                 vSplitControlsStack.widthAnchor.constraint(equalToConstant: 160),
+                centerThirdWidthControlsStack.widthAnchor.constraint(equalToConstant: 160),
+                centerThirdWidthSlider.widthAnchor.constraint(equalToConstant: 110),
                 hSplitPopUpButton.widthAnchor.constraint(equalToConstant: 100),
                 vSplitPopUpButton.widthAnchor.constraint(equalToConstant: 100),
                 hSplitField.widthAnchor.constraint(equalToConstant: 52),
@@ -1014,7 +1058,8 @@ class SettingsViewController: NSViewController {
                 gridHeaderLabel.widthAnchor.constraint(equalTo: mainStackView.widthAnchor),
                 cyclingHintLabel.widthAnchor.constraint(equalTo: mainStackView.widthAnchor, constant: -20),
                 hSplitControlsStack.trailingAnchor.constraint(equalTo: largerWidthShortcutView.trailingAnchor),
-                vSplitControlsStack.trailingAnchor.constraint(equalTo: largerWidthShortcutView.trailingAnchor)
+                vSplitControlsStack.trailingAnchor.constraint(equalTo: largerWidthShortcutView.trailingAnchor),
+                centerThirdWidthControlsStack.trailingAnchor.constraint(equalTo: largerWidthShortcutView.trailingAnchor)
             ])
 
             let containerView = NSView()

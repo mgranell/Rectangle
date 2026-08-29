@@ -40,13 +40,13 @@ class FirstThirdCalculation: WindowCalculation, OrientationAware {
     
     func landscapeRect(_ visibleFrameOfScreen: CGRect) -> RectResult {
         var rect = visibleFrameOfScreen
-        rect.size.width = floor(visibleFrameOfScreen.width / 3.0)
+        rect.size.width = CenterThirdWidthRatioCalculation.sideDimension(visibleFrameOfScreen.width)
         return RectResult(rect, subAction: .leftThird)
     }
-    
+
     func portraitRect(_ visibleFrameOfScreen: CGRect) -> RectResult {
         var rect = visibleFrameOfScreen
-        rect.size.height = floor(visibleFrameOfScreen.height / 3.0)
+        rect.size.height = CenterThirdWidthRatioCalculation.sideDimension(visibleFrameOfScreen.height)
         rect.origin.y = visibleFrameOfScreen.minY + visibleFrameOfScreen.height - rect.height
         return RectResult(rect, subAction: .topThird)
     }

@@ -74,6 +74,7 @@ class Defaults {
     static let specifiedWidth = FloatDefault(key: "specifiedWidth", defaultValue: 1680)
     static let horizontalSplitRatio = FloatDefault(key: "horizontalSplitRatio", defaultValue: 50)
     static let verticalSplitRatio = FloatDefault(key: "verticalSplitRatio", defaultValue: 50)
+    static let centerThirdWidthRatio = FloatDefault(key: "centerThirdWidthRatio", defaultValue: 100)
     static let moveCursorAcrossDisplays = OptionalBoolDefault(key: "moveCursorAcrossDisplays")
     static let moveCursor = OptionalBoolDefault(key: "moveCursor")
     static let autoMaximize = OptionalBoolDefault(key: "autoMaximize")
@@ -167,6 +168,7 @@ class Defaults {
         specifiedWidth,
         horizontalSplitRatio,
         verticalSplitRatio,
+        centerThirdWidthRatio,
         moveCursorAcrossDisplays,
         moveCursor,
         autoMaximize,
